@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# See http://yuiblog.com/blog/2008/11/14/imageopt-3/ for image optimisation
+# pointers.
+
+crush_images()
+{
+    local $dest
+    for src in *.png; do
+        (echo $src | grep -qs -- "-crushed.") && continue
+        dest="$(echo $src | sed 's,\.,-crushed.,')"
+        echo -n "Crushing $src ... "
+        pngcrush -rem alla -brute -reduce $src $dest >/dev/null
+        [ $? -eq 0 ] && echo "ok"
+    done
+}
+
+prompt_to_overwrite()
+{
+    read -p "Overwrite original files? (y/N) "
+    [ "$REPLY" == "y" ]    
+}
+
+overwrite_originals()
+{
+    for crushed in *-crushed.png; do
+        orig="$(echo $crushed | sed 's,-crushed\.,.,')"
+        echo -n "Overwriting $orig ... "
+        mv $crushed $orig
+        [ $? -eq 0 ] && echo "ok"
+    done
+}
+
+## Main program
+
+set -e
+[ -n "$DEBUG" ] && set -x
+
+crush_images
+prompt_to_overwrite && overwrite_originals
