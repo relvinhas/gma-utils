@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Mounts an NFS share at ~/vm/<hostname> and sets the clock on the host
+# (suitable for use with recently unsuspended virtual machines, hence the
+# name "mount-vm").
+
+usage()
+{
+    echo "Usage: $(basename $0) <host>" 1>&2
+    exit 1
+}
+
+mount_nfs()
+{
+    local source="$HOST:/home/$USER"
+    local target="$HOME/vm/$HOST"
+    mkdir -p "$target"
+    /bin/echo -n "Mounting $source at $target ... "
+    mount | grep -qs $HOST || mount -t nfs $source $target
+    [ $? -eq 0 ] && echo "ok"
+}
+
+set_vm_clock()
+{
+    /bin/echo -n "Setting VM date: "
+    ssh $HOST "sudo date -s \"$(date)\""
+}
+
+## Main program
+
+[ -n "$DEBUG" ] && set -x
+
+HOST="$1"
+[ -z "$HOST" ] && usage
+
+mount_nfs
+set_vm_clock
