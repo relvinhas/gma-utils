@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+
+import re
+import sys
+
+
+leading_the = re.compile(r'^the ', re.IGNORECASE)
+
+
+def sort_ignoring_the(a, b):
+    a = re.sub(leading_the, '', a)
+    b = re.sub(leading_the, '', b)
+    return cmp(a.lower(), b.lower())
+
+
+def main():
+    try:
+        input_file = file(sys.argv[1])
+    except LookupError:
+        input_file = sys.stdin
+    for line in sorted(input_file.readlines(), sort_ignoring_the):
+        print line,
+
+
+if __name__ == '__main__':
+    main()
