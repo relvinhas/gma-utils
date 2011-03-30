@@ -1,0 +1,13 @@
+#!/bin/sh
+
+usage()
+{
+   echo "Usage: $(basename $0) <gem>" 1>&2
+   exit 1
+}
+
+GEM="$1"
+EDITOR=$(echo $(basename $0) | sed 's,gem$,,')
+
+[ -z "$GEM" ] && usage
+$EDITOR "$(gem environment gemdir)/gems/$GEM"
