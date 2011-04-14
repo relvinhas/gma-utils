@@ -1,0 +1,25 @@
+#!/bin/sh
+
+## Functions
+
+current_setting()
+{
+    defaults read com.apple.finder AppleShowAllFiles
+}
+
+update_setting()
+{
+    echo "Setting AppleShowAllFiles to $1"
+    defaults write com.apple.finder AppleShowAllFiles $1
+}
+
+## Main program
+
+[ -n "$DEBUG" ] && set -x
+
+if [ "$(current_setting)" = "FALSE" ]; then
+    update_setting TRUE
+else
+    update_setting FALSE
+fi
+killall Finder
