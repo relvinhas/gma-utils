@@ -1,0 +1,14 @@
+#!/bin/sh
+
+ECHO="/bin/echo"
+
+[ -n "$DEBUG" ] && set -x
+
+FOLDER="spec"
+[ -n "$1" ] && FOLDER="$FOLDER/$1"
+
+for SPEC in $(find "$FOLDER" -name \*_spec.rb); do
+    $ECHO -n "$SPEC ... "
+    rspec --fail-fast $SPEC >/dev/null 2>&1
+    [ $? == 0 ] && $ECHO ok || $ECHO FAIL
+done
