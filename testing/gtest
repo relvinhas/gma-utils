@@ -1,0 +1,14 @@
+#!/bin/sh
+
+ECHO="/bin/echo"
+
+[ -n "$DEBUG" ] && set -x
+
+FOLDER="test"
+[ -n "$1" ] && FOLDER="$FOLDER/$1"
+
+for TEST in $(find "$FOLDER" -name \*_test.rb); do
+    $ECHO -n "$TEST ... "
+    ruby $TEST >/dev/null 2>&1
+    [ $? == 0 ] && $ECHO ok || $ECHO FAIL
+done
