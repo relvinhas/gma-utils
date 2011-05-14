@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# This script is useful if you want to swap the names of two files
+# in your Git repository. Best used as an alias.
+#
+# See http://effectif.com/git/swapping-two-files-in-git for instructions.
+
 TEMP="/tmp/$(basename $0).$$.tmp"
 
 cp $1 $TEMP
