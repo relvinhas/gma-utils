@@ -6,8 +6,22 @@ usage()
    exit 1
 }
 
+using_rvm()
+{
+    which ruby | grep -qs .rvm
+}
+
+get_gemdir()
+{
+    if using_rvm; then
+        rvm gemset gemdir
+    else
+        gem environment gemdir
+    fi
+}
+
 GEM="$1"
 EDITOR=$(echo $(basename $0) | sed 's,gem$,,')
 
 [ -z "$GEM" ] && usage
-$EDITOR "$(gem environment gemdir)/gems/$GEM"
+$EDITOR "$(get_gemdir)/gems/$GEM"
