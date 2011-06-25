@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# I suspect one of the command line GitHub tools already supports this,
+# but it was quicker to cook this up than to go and check and install
+# one of 'em.
+#
+# See http://help.github.com/send-pull-requests/ for docs on merging.
+#
+# In short, set GITHUB_USER to your GitHub username (e.g. in your
+# ~/.bashrc file), then do this:
+#
+#   pull-request-patch 25 | less    # review the patch
+#   pull-request-patch 25 | git am  # apply it
+
+setup_message()
+{
+    echo "Set GITHUB_USER to your GitHub username, then try again." 1>&2
+    exit 2
+}
+
+usage()
+{
+    echo "Usage: $(basename $0) <pull-request-number>" 1>&2
+    exit 1
+}
+
+PROJECT=$(basename $(pwd))
+REQUEST=$1
+
+[ -z "$GITHUB_USER" ] && setup_message
+[ -z "$REQUEST" ] && usage
+
+curl https://github.com/$GITHUB_USER/$PROJECT/pull/$REQUEST.patch
