@@ -4,6 +4,8 @@
 # https://culturedcode.com/things/wiki/index.php/Sync_via_Dropbox_with_a_lock_file
 
 # Installation:
+#
+# mv /Applications/Things.app/Contents/MacOs/Things /Applications/Things.app/Contents/MacOs/Things.exe
 # cp things-lock-file.sh /Applications/Things.app/Contents/MacOS/Things
 
 # Set locations
