@@ -9,11 +9,11 @@
 # Set locations
 appdir="/Applications/Things.app/Contents/MacOS"
 things="Things.exe"
-datadir="${HOME}/Dropbox/Things"
+datadir="${HOME}/Dropbox/Library/Application Support/Cultured Code/Things"
 lockfile="Things.lock"
 
 # Check for lock file
-if [ -f ${datadir}/${lockfile} ]
+if [ -f "${datadir}/${lockfile}" ]
 then
 	/usr/bin/osascript -e "set CR to ASCII character 13" \
 	-e "tell application \"System Events\" to display alert \"${lockfile} exists!\" \
@@ -25,10 +25,10 @@ then
 fi
 
 # No lock file, create one
-if /usr/bin/touch ${datadir}/${lockfile}
+if /usr/bin/touch "${datadir}/${lockfile}"
 then
-	date >> ${datadir}/${lockfile}
-	hostname >> ${datadir}/${lockfile}
+	date >> "${datadir}/${lockfile}"
+	hostname >> "${datadir}/${lockfile}"
 else
 	/usr/bin/osascript -e "set CR to ASCII character 13" \
 	-e "tell application \"System Events\" to display alert \"Can not create lock file\" \
@@ -43,7 +43,7 @@ fi
 "${appdir}/${things}"
 
 # Clean up lock file
-if /bin/rm ${datadir}/${lockfile}
+if /bin/rm "${datadir}/${lockfile}"
 then
 	# All good, exit clean
 	exit 0
