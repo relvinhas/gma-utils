@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd ~/Dropbox/effectif/instiki
+bundle exec ./instiki --daemon
