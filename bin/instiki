@@ -1,4 +1,65 @@
 #!/bin/sh
 
+usage()
+{
+    echo "Usage: $(basename $0) <start|stop|status>" 1>&2
+    exit 1
+}
+
+daemon_pid()
+{
+    ps x | grep instiki | grep daemon | awk '{ print $1 }'
+}
+
+status()
+{
+    if [ "$(daemon_pid)" = "" ]; then
+        echo "stopped"
+    else
+        echo "running [$(daemon_pid)]"
+    fi
+}
+
+start()
+{
+    bundle exec ./instiki --daemon
+}
+
+stop()
+{
+    if [ "$(status)" = "stopped" ]; then
+        echo "not running" 1>&2
+        exit 1
+    fi
+    local file_pid="$(cat tmp/pids/server.pid)"
+    local running_pid="$(daemon_pid)"
+    if [ "$file_pid" = "$running_pid" ]; then
+        /bin/echo -n "Killing $file_pid ... "
+        kill $file_pid
+        [ $? -eq 0 ] && echo "ok"
+    else
+        echo "Error: server.pid ($file_pid) != running pid ($(running_pid))"
+        exit 1
+    fi
+}
+
+# Main program
+
+[ -n "$DEBUG" ] && set -x
+set -e
+
 cd ~/Dropbox/effectif/instiki
-bundle exec ./instiki --daemon
+
+COMMAND=$1
+shift
+
+case "$COMMAND" in
+    start)
+        start;;
+    stop)
+        stop;;
+    status)
+        status;;
+    *)
+        usage;;
+esac
