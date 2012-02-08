@@ -54,12 +54,8 @@ COMMAND=$1
 shift
 
 case "$COMMAND" in
-    start)
-        start;;
-    stop)
-        stop;;
-    status)
-        status;;
+    start|stop|status)
+        $COMMAND;;
     *)
         usage;;
 esac
