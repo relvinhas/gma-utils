@@ -26,7 +26,8 @@ EDITOR=$(echo $(basename $0) | sed 's,gem$,,')
 [ -z "$GEM" ] && usage
 DIR="$(get_gemdir)/gems/$GEM"
 if [ -d $DIR ]; then
-    $EDITOR $DIR
+    cd $DIR
+    $EDITOR .
 else
     echo "Not found: $DIR" 1>&2
 fi
