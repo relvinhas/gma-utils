@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "Usage: $(basename $0) <start|stop|status>" 1>&2
+    echo "Usage: $(basename $0) <start|stop|status|flush-cache>" 1>&2
     exit 1
 }
 
@@ -43,6 +43,11 @@ stop()
     fi
 }
 
+flush_cache()
+{
+    find cache -name \*.cache -exec rm {} \;
+}
+
 # Main program
 
 [ -n "$DEBUG" ] && set -x
@@ -54,8 +59,8 @@ COMMAND=$1
 shift
 
 case "$COMMAND" in
-    start|stop|status)
-        $COMMAND;;
+    start|stop|status|flush-cache)
+        $(echo $COMMAND | sed 's,-,_,g');;
     *)
         usage;;
 esac
