@@ -53,7 +53,7 @@ flush_cache()
 [ -n "$DEBUG" ] && set -x
 set -e
 
-cd ~/Dropbox/effectif/instiki
+cd ~/instiki
 
 COMMAND=$1
 shift
