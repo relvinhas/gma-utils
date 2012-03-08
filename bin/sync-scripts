@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for path in ~/Projects/gma-utils ~/Projects/dotfiles; do
+    echo "# Updating $path"
+    ( cd $path && git pull --rebase origin master && git push origin master )
+done
