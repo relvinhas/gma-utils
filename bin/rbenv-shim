@@ -1,1 +1,30 @@
-/Users/graham/bin/rbenv-shim
+#!/bin/sh
+
+BINARY="$1"
+GEM="${2:-$BINARY}"
+SHIMS=~/.rbenv/shims
+
+## Functions
+
+usage()
+{
+    echo "Usage: $(basename $0)" 1 >&2
+    exit 1
+}
+
+path_to_script()
+{
+    echo $(bundle show $GEM)/bin/$BINARY
+}
+
+create_symlink()
+{
+    ln -s $(path_to_script) $SHIMS/$BINARY
+}
+
+## Main program
+
+[ -n "$DEBUG" ] && set -x
+[ -z "$BINARY" ] && usage
+
+create_symlink
