@@ -19,7 +19,7 @@ def convert_top_level_describe_to_class(line)
 end
 
 def convert_nested_describe(line)
-  line.sub /^(\s+)describe/, '\1the'
+  line.sub /^(\s*)describe/, '\1the'
 end
 
 def convert_before_and_after(line)
@@ -27,15 +27,33 @@ def convert_before_and_after(line)
 end
 
 def convert_should_double_equals(line)
-  line.sub /^(\s+)(.*)\.should == (.*)/, '\1assert_equal \3, \2'
+  line.sub /^(\s*)(.*)\.should == (.*)/, '\1assert_equal \3, \2'
+end
+
+def convert_should_be_comparable(line)
+  line.sub /^(\s*)(.*)\.should ([<>=]{1,2}) (.*)/,
+      '\1assert \2 \3 \4, "should be \3 #{\4}"'
 end
 
 def convert_should_be_something(line)
-  line.sub /^(\s+)(.*)\.should be_(.*)/, %q{\1assert \2.\3?, 'should be \3'}
+  line.sub /^(\s*)(.*)\.should be_(.*)/, %q{\1assert \2.\3?, 'should be \3'}
+end
+
+def convert_should_match(line)
+  line.sub /^(\s*)(.*)\.should match\((.*)\)\s*$/,
+      %q{\1assert_match \3, \2, 'should match \3'}
+end
+
+def convert_should_include(line)
+  line.sub /^(\s*)(.*)\.should include\((.*)\)\s*$/, '\1assert_includes \2, \3'
+end
+
+def convert_should_not_include(line)
+  line.sub /^(\s*)(.*)\.should_not include\((.*)\)\s*$/, '\1refute_includes \2, \3'
 end
 
 def convert_have_matcher(line)
-  line.sub /^(\s+)(.*)\.should have\((\d+)\).*/, '\1assert_equal \3, \2.size'
+  line.sub /^(\s*)(.*)\.should have\((\d+)\).*/, '\1assert_equal \3, \2.size'
 end
 
 ARGF.each_line do |line|
@@ -45,7 +63,11 @@ ARGF.each_line do |line|
     :convert_nested_describe,
     :convert_before_and_after,
     :convert_should_double_equals,
+    :convert_should_be_comparable,
     :convert_should_be_something,
+    :convert_should_match,
+    :convert_should_include,
+    :convert_should_not_include,
     :convert_have_matcher
   ].inject(line) { |line, method| send(method, line) }
 end
