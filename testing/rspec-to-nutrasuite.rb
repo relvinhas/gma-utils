@@ -31,7 +31,11 @@ def convert_should_double_equals(line)
 end
 
 def convert_should_be_something(line)
-  line.sub /^(\s+)(.*)\.should be_(.*)/, '\1assert \2.\3?'
+  line.sub /^(\s+)(.*)\.should be_(.*)/, %q{\1assert \2.\3?, 'should be \3'}
+end
+
+def convert_have_matcher(line)
+  line.sub /^(\s+)(.*)\.should have\((\d+)\).*/, '\1assert_equal \3, \2.size'
 end
 
 ARGF.each_line do |line|
@@ -41,7 +45,8 @@ ARGF.each_line do |line|
     :convert_nested_describe,
     :convert_before_and_after,
     :convert_should_double_equals,
-    :convert_should_be_something
+    :convert_should_be_something,
+    :convert_have_matcher
   ].inject(line) { |line, method| send(method, line) }
 end
 
