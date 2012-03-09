@@ -26,12 +26,22 @@ def convert_before_and_after(line)
   line.sub /(before|after)[(\s]+:each\)?/, '\1'
 end
 
+def convert_should_double_equals(line)
+  line.sub /^(\s+)(.*)\.should == (.*)/, '\1assert_equal \3, \2'
+end
+
+def convert_should_be_something(line)
+  line.sub /^(\s+)(.*)\.should be_(.*)/, '\1assert \2.\3?'
+end
+
 ARGF.each_line do |line|
   puts [
     :convert_require_statements,
     :convert_top_level_describe_to_class,
     :convert_nested_describe,
-    :convert_before_and_after
+    :convert_before_and_after,
+    :convert_should_double_equals,
+    :convert_should_be_something
   ].inject(line) { |line, method| send(method, line) }
 end
 
