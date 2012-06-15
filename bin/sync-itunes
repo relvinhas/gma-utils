@@ -1,0 +1,44 @@
+#!/bin/sh
+
+LIBRARY_PATH="$HOME/Music/iTunes/iTunes Media/Music"
+EXTENSIONS="mp3 m4a m4v"
+
+## Functions
+
+usage()
+{
+    echo "Usage: $(basename $0) <hostname>" 1 >&2
+    exit 1
+}
+
+list_local_files()
+{
+    local prefix="$1"
+    local ext
+    local tempfile=$(mktemp -t $(basename $0))
+    for ext in $EXTENSIONS; do
+        $prefix find . -name \*.$ext >> $tempfile
+    done
+    echo $tempfile
+}
+
+list_remote_files()
+{
+    list_local_files "ssh $REMOTE_HOST cd '$LIBRARY_PATH' &&"
+}
+
+## Main program
+
+[ -n "$DEBUG" ] && set -x
+
+REMOTE_HOST="$1"
+[ -z "$REMOTE_HOST" ] && usage
+
+cd "$LIBRARY_PATH"
+LOCAL_FILE=$(list_local_files)
+REMOTE_FILE=$(list_remote_files)
+
+echo $LOCAL_FILE
+echo $REMOTE_FILE
+
+diff -r $LOCAL_FILE $REMOTE_FILE
