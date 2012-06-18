@@ -1,6 +1,9 @@
 #!/bin/sh
 
-for path in ~/Projects/gma-utils ~/Projects/dotfiles; do
+PULL="git pull --rebase origin master"
+PUSH="git push origin master"
+
+for path in ~/Projects/gma-utils ~/Projects/dotfiles ~/.vim; do
     echo "# Updating $path"
-    ( cd $path && git pull --rebase origin master && git push origin master )
+    ( cd $path && $PULL && $PUSH )
 done
