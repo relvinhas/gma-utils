@@ -1,4 +1,6 @@
 #!/bin/sh
+#
+# See http://www.browserstack.com/local-testing to get the jar file.
 
 KEY_FILE="$HOME/.browser-stack.key"
 
