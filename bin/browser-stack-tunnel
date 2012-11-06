@@ -1,0 +1,14 @@
+#!/bin/sh
+
+KEY_FILE="$HOME/.browser-stack.key"
+
+if [ ! -f $KEY_FILE ]; then
+    echo "Error: Can't find $KEY_FILE"
+    exit 1
+fi
+
+KEY="$(cat $KEY_FILE)"
+PORT="${1:-3000}"
+HOST="${2:-localhost}"
+
+java -jar /usr/local/share/BrowserStackTunnel.jar $KEY $HOST,$PORT,0
