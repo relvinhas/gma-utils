@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ssh -f fig.effectif.com -L localhost:2500:fig.effectif.com:2500 -N
