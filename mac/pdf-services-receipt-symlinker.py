@@ -43,6 +43,8 @@ def make_folder(parent_folder):
 def update_symlink(parent_folder, menu_item):
     path = make_folder(parent_folder)
     destination = os.path.expanduser("~/Library/PDF Services/%s" % menu_item)
+    if os.path.exists(destination):
+        os.remove(destination)
     os.symlink(path, destination)
 
 
