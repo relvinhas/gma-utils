@@ -1,0 +1,19 @@
+#!/bin/sh
+
+usage()
+{
+    echo "Usage: $(basename $0) <YYYYMMDD> <filename> [filename ...]" 1>&2
+    exit 1
+}
+
+
+## Main program
+
+[ -n "$DEBUG" ] && set -x
+
+DATE="$1"
+shift
+FILENAMES=$@
+[ -z "$DATE" -o -z "$FILENAMES" ] && usage
+
+touch -t "${DATE}0900" $FILENAMES
