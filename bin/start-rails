@@ -16,7 +16,7 @@ allow_graceful_death()
         $ECHO -n "."
         sleep 1
     done
-    echo "ok"
+    echo " ok"
 }
 
 ## Main program

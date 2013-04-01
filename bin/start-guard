@@ -1,0 +1,35 @@
+#!/bin/sh
+
+ECHO="/bin/echo"
+
+get_guard_pid()
+{
+    ps aux | grep bin/guard | grep -v grep | awk '{ print $2 }'
+}
+
+allow_graceful_death()
+{
+    $ECHO -n "Waiting for $GUARD_PID to die: "
+    while true; do
+        [ -z "$(get_guard_pid)" ] && break
+        $ECHO -n "."
+        sleep 1
+    done
+    echo " ok"
+}
+
+## Main program
+
+[ -n "$DEBUG" ] && set -x
+
+GUARD_PID=$(get_guard_pid)
+if [ -n "$GUARD_PID" ]; then
+    echo "Killing $GUARD_PID"
+    kill $GUARD_PID
+    allow_graceful_death
+else
+    echo "Guard isn't running."
+fi
+
+echo "Starting guard [$$] ..."
+exec bundle exec guard
