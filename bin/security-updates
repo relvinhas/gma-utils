@@ -1,0 +1,5 @@
+#!/bin/sh
+
+for HOST in $(cat ~/.security-hosts); do
+    ssh $HOST ./security.sh
+done
