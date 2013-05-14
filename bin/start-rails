@@ -19,6 +19,18 @@ allow_graceful_death()
     echo " ok"
 }
 
+dev_server()
+{
+    local server
+    for server in thin unicorn; do
+        if grep -qs -e "[\"']${server}[\"']" Gemfile.lock; then
+            echo $server
+            break
+        fi
+    done
+}
+
+
 ## Main program
 
 [ -n "$DEBUG" ] && set -x
@@ -33,4 +45,4 @@ else
 fi
 
 echo "Starting rails [$$] ..."
-exec rails server thin -p $PORT
+exec rails server $(dev_server) -p $PORT
